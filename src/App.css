@@ -1,6 +1,8 @@
 
 html {
-  background-color: #222;
+  background-color: #9999;
+  padding: 20px;
+  border-radius: 20%;
 }
 
 .connection-status {
@@ -18,6 +20,16 @@ html {
 .connection-status-disconnected {
   background-color: #800;
   color: #fee;
+}
+
+.browsebtn {
+  background-color: #777;
+  height: 2vw;
+  width: 5vw;
+}
+
+.browsebtn:hover{
+  background-color: #555;
 }
 
 .card {
@@ -44,6 +56,10 @@ button.disconnected {
   background-color: #777;
 }
 
+button.disable {
+  background-color: #ea4848;
+}
+
 button.disconnected:hover {
   background-color: #777;
 }
@@ -54,4 +70,19 @@ h2 {
 
 button:hover {
   background-color: #0a0;
+}
+
+/* Full-width input fields */
+input[type=text] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background-color: #ddd;
+}
+
+input[type=text]:focus {
+  background: #f1f1f1;
+  outline: none;
 }
