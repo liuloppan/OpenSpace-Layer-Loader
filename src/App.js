@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
 import openspaceApi from 'openspace-api-js';
-import actions from './actions';
 
 class App extends Component {
   constructor(props) {
@@ -10,7 +9,8 @@ class App extends Component {
 
     api.onDisconnect(() => {
       this.setState({
-        connected: false
+        connected: false,
+        chosenLayer: "AIRS_CO_Total_Column_Day"
       });
     });
 
@@ -19,12 +19,14 @@ class App extends Component {
         this.openspace = await api.library();
         console.log('connected!')
         this.setState({
-          connected: true
+          connected: true,
+          chosenLayer: "AIRS_CO_Total_Column_Day"
         });
       } catch (e) {
         console.log('OpenSpace library could not be loaded: Error: \n', e)
         this.setState({
-          connected: false
+          connected: false,
+          chosenLayer: ""
         });
         return;
       }
@@ -34,6 +36,25 @@ class App extends Component {
       connected: false
     }
     api.connect();
+    this.addLayer = this.addLayer.bind(this)
+    this.enableLayer = this.enableLayer.bind(this)
+  }
+
+  async addLayer() {
+
+    const myLayer = await this.openspace.globebrowsing.createGibsGdalXml(this.state.chosenLayer,"2018-06-21","2km","png")
+    console.log( myLayer[1])
+    this.openspace.globebrowsing.addLayer("Earth", "ColorLayers",{
+        Identifier : this.state.chosenLayer,
+        Name : "AIRS CO Total Column Day",
+        FilePath : myLayer[1]
+      }
+    )
+  }
+
+  enableLayer(){
+
+    this.openspace.setPropertyValueSingle("Scene.Earth.Renderable.Layers.ColorLayers." + this.state.chosenLayer + ".Enabled", true);
   }
 
   get connectionStatus() {
@@ -41,35 +62,21 @@ class App extends Component {
       return <div className="connection-status connection-status-connected">
         Connected to OpenSpace
        </div>
-  } else {
-    return <div className="connection-status connection-status-disconnected">
-        Disconnected from OpenSpace
-       </div>
+    } else {
+      return <div className="connection-status connection-status-disconnected">
+          Disconnected from OpenSpace
+         </div>
+    }
   }
-}
 
   render() {
     return <div>
       {this.connectionStatus}
       <div className="main">
-      {
-        actions(this.openspace).map((action, id) => {
-          return <div key={id} className="card">
-            <h2>{action.title}</h2>
-            {action.description && action.description.split('\n').map(item => {
-              return <p key={item}>{item}</p>
-            })}
-            {
-              action.buttons && Object.keys(action.buttons).map(button => {
-                const fn = action.buttons[button];
-                const error = () => {console.log('Disconnected!') }
-                const c = this.state.connected ? "connected" : "disconnected";
-                return <button key={button} className={c} onClick={this.openspace ? fn : error}>{button}</button>
-              })
-            }
-          </div>;
-        })
-      }
+
+        <button onClick = {this.addLayer}> Add Layer to OpenSpace</button>
+        <button onClick = {this.enableLayer}> Enable Layer</button>
+
       </div>
     </div>
   }
