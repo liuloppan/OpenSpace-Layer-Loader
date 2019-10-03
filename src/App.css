@@ -23,13 +23,13 @@ html {
 }
 
 .browsebtn {
-  background-color: #777;
-  height: 2vw;
-  width: 5vw;
+  background-color: #666;
+  height: 50px;
+  width: 110px;
 }
 
 .browsebtn:hover{
-  background-color: #555;
+  background-color: #888;
 }
 
 .card {
@@ -37,6 +37,22 @@ html {
   margin: 1em;
   padding: 0.5em;
   color: #eee;
+}
+
+.disable {
+  background-color: #ea4848;
+}
+
+.disable:hover {
+  background-color: #fa6666;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  color: white;
 }
 
 
@@ -56,9 +72,6 @@ button.disconnected {
   background-color: #777;
 }
 
-button.disable {
-  background-color: #ea4848;
-}
 
 button.disconnected:hover {
   background-color: #777;

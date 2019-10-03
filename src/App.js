@@ -112,9 +112,9 @@ class App extends Component {
     return <div>
       {this.connectionStatus}
       <div className="main">
-
+        <br></br>
         <button className="browsebtn">
-        <a href="https://wiki.earthdata.nasa.gov/display/GIBS/GIBS+Available+Imagery+Products" target="_blank">Browse data</a>
+        <a href="https://wiki.earthdata.nasa.gov/display/GIBS/GIBS+Available+Imagery+Products" target="_blank">Browse Layers</a>
         </button>
 
         {console.log(this.state)}
