@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Select from 'react-select';
 import './App.css';
 import openspaceApi from 'openspace-api-js';
 
@@ -34,7 +35,9 @@ class App extends Component {
       layerName: 'GPW_Population_Density_2000',
       date: '2000-06-21',
       format: 'png',
-      resolution: '1km'
+      resolution: '1km',
+      loadedLayers: [],
+      selectedLayer: 'Select...'
     }
     api.connect();
 
@@ -54,8 +57,6 @@ class App extends Component {
   }
 
   handleSubmit(event) {
-    //alert('A name was submitted: ' + this.state.value);
-    console.log("Submit!")
     event.preventDefault();
 
     this.setState({
@@ -83,17 +84,23 @@ class App extends Component {
         FilePath : generatedLayer[1]
       }
     )
+
+    var option = {label: layerName, value: layerName}
+
+    this.setState(previousState => ({
+      loadedLayers: [...previousState.loadedLayers, option]
+    }));
   }
 
   enableLayer(){
 
-    this.openspace.setPropertyValueSingle("Scene.Earth.Renderable.Layers.ColorLayers." + this.state.layerName + ".Enabled", true);
+    this.openspace.setPropertyValueSingle("Scene.Earth.Renderable.Layers.ColorLayers." + this.state.selectedLayer + ".Enabled", true);
   }
 
 
   disableLayer(){
 
-    this.openspace.setPropertyValueSingle("Scene.Earth.Renderable.Layers.ColorLayers." + this.state.layerName + ".Enabled", false);
+    this.openspace.setPropertyValueSingle("Scene.Earth.Renderable.Layers.ColorLayers." + this.state.selectedLayer + ".Enabled", false);
   }
 
   get connectionStatus() {
@@ -131,15 +138,16 @@ class App extends Component {
           <br></br>
           Format:
           <input type="text" name="format" defaultValue={this.state.format} onChange = {this.handleChange}></input>
-          <button type="submit" value="Submit">Add Layer to OpenSpace</button>
+          <button type="submit" value="Submit">Add Layer {this.state.layerName} to OpenSpace</button>
         </form>
+        <br></br>
+        <br></br>
+        <button onClick = {this.enableLayer}> Enable Layer: {this.state.selectedLayer}</button>
+        <button onClick = {this.disableLayer} className="disable"> Disable Layer: {this.state.selectedLayer}</button>
 
-        <button onClick = {this.enableLayer}> Enable Layer: {this.state.layerName}</button>
-
-        <button onClick = {this.disableLayer} className="disable"> Disable Layer: {this.state.layerName}</button>
-
-
-
+        <div className="container">
+          <Select options={this.state.loadedLayers} onChange = {opt => this.setState({selectedLayer: opt.value })} />
+        </div>
       </div>
     </div>
   }
